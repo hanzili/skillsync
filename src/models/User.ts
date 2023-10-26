@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose'
-import bcrypt from 'bcrypt'
+import { hashPassword, comparePasswords } from '../utils/userUtils'
 
 export interface IUser extends Document {
   username: string
@@ -17,18 +17,15 @@ const userSchema = new mongoose.Schema({
 // Pre-save hook to hash the password
 userSchema.pre<IUser>('save', async function (next) {
   if (this.isModified('password') || this.isNew) {
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(this.password, salt)
-    this.password = hash
+    this.password = await hashPassword(this.password)
   }
   next()
 })
 
-// Method to compare passwords
 userSchema.methods.comparePassword = async function (
   candidatePassword: string,
 ): Promise<boolean> {
-  return bcrypt.compare(candidatePassword, this.password)
+  return comparePasswords(candidatePassword, this.password)
 }
 
 const User = mongoose.model<IUser>('User', userSchema)

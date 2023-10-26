@@ -1,5 +1,6 @@
-import jwt from 'jsonwebtoken'
 import UserDao from '../dao/user.dao'
+import { IUser } from '../models/User'
+import { generateToken } from '../utils/userUtils'
 
 class UserService {
   async register(
@@ -7,22 +8,35 @@ class UserService {
     email: string,
     password: string,
   ): Promise<string> {
+    const existingUser = await UserDao.findUserByEmail(email)
+    if (existingUser) throw new Error('User with this email already exists')
     const user = await UserDao.createUser(username, email, password)
-    return jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
-      expiresIn: '3h',
-    })
+    return generateToken(user.id)
   }
 
   async login(email: string, password: string): Promise<string | null> {
     const user = await UserDao.findUserByEmail(email)
-    if (!user) return null
+    if (!user) throw new Error('Invalid email or password')
 
     const isMatch = await user.comparePassword(password)
-    if (!isMatch) return null
+    if (!isMatch) throw new Error('Invalid email or password')
 
-    return jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
-      expiresIn: '3h',
-    })
+    return generateToken(user.id)
+  }
+
+  async changeUserInfo(
+    userId: string,
+    updateFields: Partial<IUser>,
+  ): Promise<IUser> {
+    const updatedUser = await UserDao.updateUser(userId, updateFields)
+    if (!updatedUser) throw new Error('User not found')
+    return updatedUser
+  }
+
+  async deleteUser(userId: string): Promise<IUser> {
+    const deletedUser = await UserDao.deleteUser(userId)
+    if (!deletedUser) throw new Error('User not found')
+    return deletedUser
   }
 }
 
