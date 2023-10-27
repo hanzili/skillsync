@@ -1,6 +1,7 @@
 import express from 'express'
 import { body } from 'express-validator'
 import userController from '../controllers/user.controller' // Import the default export
+import { authenticateJWT, authorize } from '../middlewares/user.middleware'
 
 const router = express.Router()
 
@@ -17,5 +18,26 @@ router.post(
 )
 
 router.post('/login', userController.login)
+
+router.get(
+  '/user/:id',
+  authenticateJWT,
+  authorize(['admin']),
+  userController.getUser,
+)
+
+router.put(
+  '/user/:id',
+  authenticateJWT,
+  authorize(['admin']),
+  userController.updateUser,
+)
+
+router.delete(
+  '/user/:id',
+  authenticateJWT,
+  authorize(['admin']),
+  userController.deleteUser,
+)
 
 export default router

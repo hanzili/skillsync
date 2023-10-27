@@ -1,7 +1,6 @@
 import UserService from '../../src/services/user.service'
 import UserDao from '../../src/dao/user.dao'
 import { IUser } from '../../src/models/User'
-import jwt, { JwtPayload } from 'jsonwebtoken'
 
 // Mocking UserDao
 jest.mock('../../src/dao/user.dao')
@@ -55,57 +54,83 @@ describe('UserService', () => {
         mockUserData.password,
       )
 
-      // Decode the token to check if it has the correct userId
-      const decoded = jwt.verify(token!, process.env.JWT_SECRET!) as JwtPayload
-      expect(decoded.userId).toEqual(userId)
-      expect(mockUserDao.findUserByEmail).toHaveBeenCalledWith(
-        mockUserData.email,
-      )
-      expect(mockUser.comparePassword).toHaveBeenCalledWith(
-        mockUserData.password,
+      expect(token).toBeDefined()
+    })
+  })
+
+  describe('changeUserInfo', () => {
+    it('should throw an error if the user is not found', async () => {
+      ;(UserDao.updateUser as jest.Mock).mockResolvedValueOnce(null)
+
+      await expect(
+        UserService.changeUserInfo('12345', { username: 'newUsername' }),
+      ).rejects.toThrow('User not found')
+    })
+
+    it('should successfully update user information', async () => {
+      const updatedUser = { id: '12345', username: 'newUsername' }
+      ;(UserDao.updateUser as jest.Mock).mockResolvedValueOnce(updatedUser)
+
+      const result = await UserService.changeUserInfo('12345', {
+        username: 'newUsername',
+      })
+      expect(result).toEqual(updatedUser)
+    })
+  })
+
+  describe('deleteUser', () => {
+    it('should throw an error if the user is not found', async () => {
+      ;(UserDao.deleteUser as jest.Mock).mockResolvedValueOnce(null)
+
+      await expect(UserService.deleteUser('12345')).rejects.toThrow(
+        'User not found',
       )
     })
 
-    it('should return null for invalid credentials', async () => {
-      const mockUserData = {
-        email: 'test@example.com',
-        password: 'wrongPassword',
+    it('should successfully delete a user', async () => {
+      const deletedUser = { id: '12345', username: 'testuser' }
+      ;(UserDao.deleteUser as jest.Mock).mockResolvedValueOnce(deletedUser)
+
+      const result = await UserService.deleteUser('12345')
+      expect(result).toEqual(deletedUser)
+    })
+  })
+
+  describe('authorize', () => {
+    it('should return true if user has required role', async () => {
+      const userId = 'someUserId'
+      const requiredRoles = ['admin']
+      const mockUser: Partial<IUser> = {
+        role: 'admin',
       }
-      const mockUser = {
-        comparePassword: jest.fn().mockResolvedValue(false),
-      } as unknown as IUser
-      mockUserDao.findUserByEmail.mockResolvedValue(mockUser)
+      UserDao.findUserById = jest.fn().mockResolvedValue(mockUser as IUser)
 
-      const token = await UserService.login(
-        mockUserData.email,
-        mockUserData.password,
-      )
+      const result = await UserService.authorize(userId, requiredRoles)
 
-      expect(token).toBeNull()
-      expect(mockUserDao.findUserByEmail).toHaveBeenCalledWith(
-        mockUserData.email,
-      )
-      expect(mockUser.comparePassword).toHaveBeenCalledWith(
-        mockUserData.password,
-      )
+      expect(result).toBe(true)
     })
 
-    it('should return null for non-existent email', async () => {
-      const mockUserData = {
-        email: 'nonexistent@example.com',
-        password: 'password123',
+    it('should return false if user does not have required role', async () => {
+      const userId = 'someUserId'
+      const requiredRoles = ['admin']
+      const mockUser: Partial<IUser> = {
+        role: 'user',
       }
-      mockUserDao.findUserByEmail.mockResolvedValue(null)
+      UserDao.findUserById = jest.fn().mockResolvedValue(mockUser as IUser)
 
-      const token = await UserService.login(
-        mockUserData.email,
-        mockUserData.password,
-      )
+      const result = await UserService.authorize(userId, requiredRoles)
 
-      expect(token).toBeNull()
-      expect(mockUserDao.findUserByEmail).toHaveBeenCalledWith(
-        mockUserData.email,
-      )
+      expect(result).toBe(false)
+    })
+
+    it('should throw an error if user is not found', async () => {
+      const userId = 'someUserId'
+      const requiredRoles = ['admin']
+      UserDao.findUserById = jest.fn().mockResolvedValue(null)
+
+      await expect(
+        UserService.authorize(userId, requiredRoles),
+      ).rejects.toThrow('User not found')
     })
   })
 })

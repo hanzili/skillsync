@@ -11,8 +11,27 @@ class UserDao {
     return user
   }
 
+  async findUserById(userId: string): Promise<IUser | null> {
+    return User.findById(userId)
+  }
+
   async findUserByEmail(email: string): Promise<IUser | null> {
     return User.findOne({ email })
+  }
+
+  async updateUser(
+    userId: string,
+    updateFields: Partial<IUser>,
+  ): Promise<IUser | null> {
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+      new: true,
+    })
+    return updatedUser
+  }
+
+  async deleteUser(userId: string): Promise<IUser | null> {
+    const deletedUser = await User.findByIdAndDelete(userId)
+    return deletedUser
   }
 }
 
