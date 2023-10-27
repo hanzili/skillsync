@@ -57,4 +57,80 @@ describe('UserService', () => {
       expect(token).toBeDefined()
     })
   })
+
+  describe('changeUserInfo', () => {
+    it('should throw an error if the user is not found', async () => {
+      ;(UserDao.updateUser as jest.Mock).mockResolvedValueOnce(null)
+
+      await expect(
+        UserService.changeUserInfo('12345', { username: 'newUsername' }),
+      ).rejects.toThrow('User not found')
+    })
+
+    it('should successfully update user information', async () => {
+      const updatedUser = { id: '12345', username: 'newUsername' }
+      ;(UserDao.updateUser as jest.Mock).mockResolvedValueOnce(updatedUser)
+
+      const result = await UserService.changeUserInfo('12345', {
+        username: 'newUsername',
+      })
+      expect(result).toEqual(updatedUser)
+    })
+  })
+
+  describe('deleteUser', () => {
+    it('should throw an error if the user is not found', async () => {
+      ;(UserDao.deleteUser as jest.Mock).mockResolvedValueOnce(null)
+
+      await expect(UserService.deleteUser('12345')).rejects.toThrow(
+        'User not found',
+      )
+    })
+
+    it('should successfully delete a user', async () => {
+      const deletedUser = { id: '12345', username: 'testuser' }
+      ;(UserDao.deleteUser as jest.Mock).mockResolvedValueOnce(deletedUser)
+
+      const result = await UserService.deleteUser('12345')
+      expect(result).toEqual(deletedUser)
+    })
+  })
+
+  describe('authorize', () => {
+    it('should return true if user has required role', async () => {
+      const userId = 'someUserId'
+      const requiredRoles = ['admin']
+      const mockUser: Partial<IUser> = {
+        role: 'admin',
+      }
+      UserDao.findUserById = jest.fn().mockResolvedValue(mockUser as IUser)
+
+      const result = await UserService.authorize(userId, requiredRoles)
+
+      expect(result).toBe(true)
+    })
+
+    it('should return false if user does not have required role', async () => {
+      const userId = 'someUserId'
+      const requiredRoles = ['admin']
+      const mockUser: Partial<IUser> = {
+        role: 'user',
+      }
+      UserDao.findUserById = jest.fn().mockResolvedValue(mockUser as IUser)
+
+      const result = await UserService.authorize(userId, requiredRoles)
+
+      expect(result).toBe(false)
+    })
+
+    it('should throw an error if user is not found', async () => {
+      const userId = 'someUserId'
+      const requiredRoles = ['admin']
+      UserDao.findUserById = jest.fn().mockResolvedValue(null)
+
+      await expect(
+        UserService.authorize(userId, requiredRoles),
+      ).rejects.toThrow('User not found')
+    })
+  })
 })

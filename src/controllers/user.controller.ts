@@ -22,6 +22,37 @@ class UserController {
       res.status(500).send(error)
     }
   }
+
+  async getUser(req: Request, res: Response) {
+    try {
+      const userId = req.params.id
+      const user = await UserService.getUser(userId)
+      res.json(user)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async updateUser(req: Request, res: Response) {
+    try {
+      const userId = req.params.id
+      const updateFields = req.body
+      const updatedUser = await UserService.changeUserInfo(userId, updateFields)
+      res.json(updatedUser)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async deleteUser(req: Request, res: Response) {
+    try {
+      const userId = req.params.id
+      const deletedUser = await UserService.deleteUser(userId)
+      res.json({ message: 'User deleted successfully', deletedUser })
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
 }
 
 export default new UserController()

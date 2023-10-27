@@ -24,6 +24,12 @@ class UserService {
     return generateToken(user.id)
   }
 
+  async getUser(userId: string): Promise<IUser> {
+    const user = await UserDao.findUserById(userId)
+    if (!user) throw new Error('User not found')
+    return user
+  }
+
   async changeUserInfo(
     userId: string,
     updateFields: Partial<IUser>,
@@ -37,6 +43,13 @@ class UserService {
     const deletedUser = await UserDao.deleteUser(userId)
     if (!deletedUser) throw new Error('User not found')
     return deletedUser
+  }
+
+  async authorize(userId: string, requiredRoles: string[]): Promise<boolean> {
+    const user = await UserDao.findUserById(userId)
+    if (!user) throw new Error('User not found')
+
+    return requiredRoles.includes(user.role)
   }
 }
 

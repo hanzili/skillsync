@@ -7,8 +7,8 @@ export const generateToken = (userId: string): string => {
   })
 }
 
-export const verifyToken = (token: string): jwt.JwtPayload => {
-  return jwt.verify(token, process.env.JWT_SECRET!) as jwt.JwtPayload
+export const verifyToken = (token: string) => {
+  return jwt.verify(token, process.env.JWT_SECRET!)
 }
 
 export const hashPassword = async (password: string): Promise<string> => {
