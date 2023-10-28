@@ -1,0 +1,13 @@
+components:
+  schemas:
+    Forum:
+      type: object
+      properties:
+        roadmap:
+          type: string
+          format: objectId
+        threads:
+          type: array
+          items:
+            type: string
+            format: objectId

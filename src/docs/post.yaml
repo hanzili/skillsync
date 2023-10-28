@@ -1,0 +1,17 @@
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        text:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        creator:
+          type: string
+          format: objectId
+        thread:
+          type: string
+          format: objectId

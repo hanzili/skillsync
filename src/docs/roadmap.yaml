@@ -1,0 +1,25 @@
+components:
+  schemas:
+    Roadmap:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        content:
+          type: array
+          items:
+            type: string
+            format: objectId
+        creator:
+          type: string
+          format: objectId
+        enrolledUsers:
+          type: array
+          items:
+            type: string
+            format: objectId
+        forum:
+          type: string
+          format: objectId

@@ -30,6 +30,12 @@ class UserService {
     return user
   }
 
+  async getUsers(): Promise<IUser[]> {
+    const users = await UserDao.findAllUsers()
+    if (!users || users.length === 0) throw new Error('No users found')
+    return users
+  }
+
   async changeUserInfo(
     userId: string,
     updateFields: Partial<IUser>,

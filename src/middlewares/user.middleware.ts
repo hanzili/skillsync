@@ -3,8 +3,8 @@ import { verifyToken } from '../utils/userUtils'
 import userService from '../services/user.service'
 
 interface CustomRequest extends Request {
-    userId?: string;
-  }
+  userId?: string
+}
 
 export function authenticateJWT(
   req: CustomRequest,
