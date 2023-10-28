@@ -18,11 +18,11 @@ app.use(express.json()) // For parsing application/json
 
 const specs = swaggerJsdoc({
   swaggerDefinition,
-  apis: ['./src/routes/*.ts'], // Path to API files
+  apis: ['./src/docs/*.yaml'],
 })
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
-app.use('/api/user', userRoutes)
+app.use('/api/users', userRoutes)
 
 // Sample Route
 app.get('/', (req, res) => {

@@ -33,6 +33,15 @@ class UserController {
     }
   }
 
+  async getUsers(req: Request, res: Response) {
+    try {
+      const user = await UserService.getUsers()
+      res.json(user)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
   async updateUser(req: Request, res: Response) {
     try {
       const userId = req.params.id

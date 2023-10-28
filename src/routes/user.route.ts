@@ -26,6 +26,13 @@ router.get(
   userController.getUser,
 )
 
+router.get(
+  '/users',
+  authenticateJWT,
+  authorize(['admin']),
+  userController.getUsers,
+)
+
 router.put(
   '/user/:id',
   authenticateJWT,

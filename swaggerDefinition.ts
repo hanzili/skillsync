@@ -1,17 +1,17 @@
 // swaggerDefinition.js
 const swaggerDefinition = {
+  openapi: '3.0.0',
   info: {
-    title: 'Skill Sync API',
+    title: 'Skill Sync Backend APIs',
     version: '1.0.0',
     description: 'A platform for exchanging skills',
   },
   servers: [
     {
-      url: 'http://localhost:3000',
-      description: 'Local server',
+      url: 'http://localhost:3001',
+      description: 'backend server',
     },
   ],
-  // ... other configurations
 }
 
 export default swaggerDefinition

@@ -1,0 +1,14 @@
+components:
+  schemas:
+    Content:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [video, article, assignment, quiz]
+        url:
+          type: string
+        title:
+          type: string
+        description:
+          type: string

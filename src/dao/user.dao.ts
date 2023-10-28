@@ -19,6 +19,10 @@ class UserDao {
     return User.findOne({ email })
   }
 
+  async findAllUsers(): Promise<IUser[]> {
+    return User.find()
+  }
+
   async updateUser(
     userId: string,
     updateFields: Partial<IUser>,

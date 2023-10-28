@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose'
+import mongoose, { Document, Schema } from 'mongoose'
 import { hashPassword, comparePasswords } from '../utils/userUtils'
 
 export interface IUser extends Document {
@@ -7,6 +7,8 @@ export interface IUser extends Document {
   password: string
   role: string
   comparePassword: (candidatePassword: string) => Promise<boolean>
+  enrolledRoadmaps: Schema.Types.ObjectId[]
+  createdRoadmaps: Schema.Types.ObjectId[]
 }
 
 const userSchema = new mongoose.Schema({
@@ -14,6 +16,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, required: true, default: 'user' },
+  enrolledRoadmaps: [{ type: Schema.Types.ObjectId, ref: 'Roadmap' }],
+  createdRoadmaps: [{ type: Schema.Types.ObjectId, ref: 'Roadmap' }],
 })
 
 // Pre-save hook to hash the password

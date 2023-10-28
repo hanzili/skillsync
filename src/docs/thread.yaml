@@ -1,0 +1,18 @@
+components:
+  schemas:
+    Thread:
+      type: object
+      properties:
+        title:
+          type: string
+        posts:
+          type: array
+          items:
+            type: string
+            format: objectId
+        creator:
+          type: string
+          format: objectId
+        forum:
+          type: string
+          format: objectId
