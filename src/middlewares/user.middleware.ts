@@ -6,16 +6,28 @@ interface CustomRequest extends Request {
   userId?: string
 }
 
+interface TokenPayload {
+  userId: string
+  iat: number
+  exp: number
+}
+
 export function authenticateJWT(
   req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) {
-  const token = req.header('Authorization')
-  if (!token) return res.status(403).send('Access denied. No token provided.')
+  const bearerToken = req.header('Authorization')
+  if (!bearerToken)
+    return res.status(403).send('Access denied. No token provided.')
 
   try {
-    req.userId = verifyToken(token) as string
+    const token = bearerToken.split(' ')[1]
+    const payload = verifyToken(token) as TokenPayload
+    if (!payload.userId) {
+      return res.status(400).send('Invalid token.')
+    }
+    req.userId = payload.userId
     next()
   } catch (ex) {
     res.status(400).send('Invalid token.')

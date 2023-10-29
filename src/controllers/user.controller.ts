@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import UserService from '../services/user.service'
+import { Profile } from '../models/User'
 
 class UserController {
   async register(req: Request, res: Response) {
@@ -23,31 +24,51 @@ class UserController {
     }
   }
 
-  async getUser(req: Request, res: Response) {
+  async getUserProfile(req: Request, res: Response) {
     try {
       const userId = req.params.id
       const user = await UserService.getUser(userId)
-      res.json(user)
+      const profile: Profile = {
+        username: user.username,
+        email: user.email,
+        enrolledRoadmaps: user.enrolledRoadmaps,
+        createdRoadmaps: user.createdRoadmaps,
+      }
+      res.json(profile)
     } catch (error) {
       res.status(500).send(error)
     }
   }
 
-  async getUsers(req: Request, res: Response) {
+  async getUsersProfile(req: Request, res: Response) {
     try {
-      const user = await UserService.getUsers()
-      res.json(user)
+      const users = await UserService.getUsers()
+      const usersProfile = users.map(
+        (user): Profile => ({
+          username: user.username,
+          email: user.email,
+          enrolledRoadmaps: user.enrolledRoadmaps,
+          createdRoadmaps: user.createdRoadmaps,
+        }),
+      )
+      res.json(usersProfile)
     } catch (error) {
       res.status(500).send(error)
     }
   }
 
-  async updateUser(req: Request, res: Response) {
+  async updateUserProfile(req: Request, res: Response) {
     try {
       const userId = req.params.id
-      const updateFields = req.body
-      const updatedUser = await UserService.changeUserInfo(userId, updateFields)
-      res.json(updatedUser)
+      const newProfile: Partial<Profile> = req.body
+      const updatedUser = await UserService.changeUserInfo(userId, newProfile)
+      const updatedProfile: Profile = {
+        username: updatedUser.username,
+        email: updatedUser.email,
+        enrolledRoadmaps: updatedUser.enrolledRoadmaps,
+        createdRoadmaps: updatedUser.createdRoadmaps,
+      }
+      res.json(updatedProfile)
     } catch (error) {
       res.status(500).send(error)
     }

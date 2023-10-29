@@ -20,28 +20,28 @@ router.post(
 router.post('/login', userController.login)
 
 router.get(
-  '/user/:id',
+  '/profile/:id',
   authenticateJWT,
   authorize(['admin']),
-  userController.getUser,
+  userController.getUserProfile,
 )
 
 router.get(
-  '/users',
+  '/profile',
   authenticateJWT,
   authorize(['admin']),
-  userController.getUsers,
+  userController.getUsersProfile,
 )
 
 router.put(
-  '/user/:id',
+  '/profile/:id',
   authenticateJWT,
   authorize(['admin']),
-  userController.updateUser,
+  userController.updateUserProfile,
 )
 
 router.delete(
-  '/user/:id',
+  '/:id',
   authenticateJWT,
   authorize(['admin']),
   userController.deleteUser,

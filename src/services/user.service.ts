@@ -54,7 +54,6 @@ class UserService {
   async authorize(userId: string, requiredRoles: string[]): Promise<boolean> {
     const user = await UserDao.findUserById(userId)
     if (!user) throw new Error('User not found')
-
     return requiredRoles.includes(user.role)
   }
 }
