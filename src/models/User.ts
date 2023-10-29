@@ -11,6 +11,13 @@ export interface IUser extends Document {
   createdRoadmaps: Schema.Types.ObjectId[]
 }
 
+export interface Profile {
+  username: string
+  email: string
+  enrolledRoadmaps: Schema.Types.ObjectId[]
+  createdRoadmaps: Schema.Types.ObjectId[]
+}
+
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },

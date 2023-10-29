@@ -1,10 +1,10 @@
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
-    securitySchemes:
-      bearerAuth:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
     User:
       type: object
       properties:
@@ -30,6 +30,24 @@ components:
       properties:
         token:
           type: string
+    Profile:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        enrolledRoadmaps:
+          type: array
+          items:
+            type: string
+            format: objectId
+        createdRoadmaps:
+          type: array
+          items:
+            type: string
+            format: objectId
 
 paths:
   /api/users/register:
@@ -86,7 +104,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Token'
 
-  /api/users/users:
+  /api/users/profile:
     get:
       tags:
         - Users
@@ -101,9 +119,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/Profile'
 
-  /api/users/user/{id}:
+  /api/users/profile/{id}:
     get:
       tags:
         - Users
@@ -122,7 +140,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/Profile'
     put:
       tags:
         - Users
@@ -153,8 +171,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/Profile'
 
+  /api/users/{id}:
     delete:
       tags:
         - Users
@@ -170,4 +189,7 @@ paths:
       responses:
         200:
           description: User deleted successfully
-          # Assuming no content is returned upon successful deletion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
