@@ -1,6 +1,6 @@
 import express from 'express'
 import { body } from 'express-validator'
-import userController from '../controllers/user.controller' // Import the default export
+import userController from '../controllers/user.controller'
 import { authenticateJWT, authorize } from '../middlewares/user.middleware'
 
 const router = express.Router()

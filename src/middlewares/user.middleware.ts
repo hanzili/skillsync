@@ -2,10 +2,6 @@ import { Request, Response, NextFunction } from 'express'
 import { verifyToken } from '../utils/userUtils'
 import userService from '../services/user.service'
 
-interface CustomRequest extends Request {
-  userId?: string
-}
-
 interface TokenPayload {
   userId: string
   iat: number
@@ -13,7 +9,7 @@ interface TokenPayload {
 }
 
 export function authenticateJWT(
-  req: CustomRequest,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -35,7 +31,7 @@ export function authenticateJWT(
 }
 
 export function authorize(roles: string[] = []) {
-  return async (req: CustomRequest, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.userId) {
         return res.status(401).send('Authentication required')
