@@ -5,6 +5,7 @@ export interface IContent extends Document {
   url: string
   title: string
   description: string
+  roadmap: Array<mongoose.Types.ObjectId>
 }
 
 const contentSchema = new Schema({
@@ -12,6 +13,7 @@ const contentSchema = new Schema({
   url: String,
   title: String,
   description: String,
+  roadmap: { type: Schema.Types.ObjectId, ref: 'Roadmap' },
 })
 
 const Content = mongoose.model<IContent>('Content', contentSchema)
