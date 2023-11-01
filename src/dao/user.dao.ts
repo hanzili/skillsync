@@ -1,4 +1,5 @@
 import User, { IUser } from '../models/User'
+import { createObjectId } from '../utils/common.utils'
 
 class UserDao {
   async createUser(
@@ -87,6 +88,11 @@ class UserDao {
       throw new Error('User not found')
     }
     return updatedUser
+  }
+
+  // a function that return all users who have enrolled in a roadmap
+  async findUsersByEnrolledRoadmap(roadmapId: string): Promise<IUser[]> {
+    return User.find({ enrolledRoadmaps: createObjectId(roadmapId) })
   }
 }
 

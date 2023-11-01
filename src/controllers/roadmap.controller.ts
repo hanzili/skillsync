@@ -15,7 +15,7 @@ class RoadmapController {
 
   async getRoadmap(req: Request, res: Response) {
     try {
-      const roadmapId = req.params.id
+      const roadmapId = req.params.roadmapId
       const roadmap = await RoadmapService.getRoadmap(roadmapId)
       res.json(roadmap)
     } catch (error) {
@@ -53,6 +53,7 @@ class RoadmapController {
       const userId = req.userId!
       await RoadmapService.deleteRoadmap(req.params.roadmapId, userId)
       await UserService.deleteCreatedRoadmap(userId, req.params.roadmapId)
+      await RoadmapService.unenrollAllUsers(req.params.roadmapId)
       res.json({ message: 'Roadmap deleted successfully' })
     } catch (error) {
       res.status(500).send(error)
@@ -67,6 +68,7 @@ class RoadmapController {
       await UserService.enroll(roadmapId, userId)
       res.json(roadmap)
     } catch (error) {
+      console.error('Error caught:', error) // Log the error
       res.status(500).send(error)
     }
   }
@@ -76,6 +78,7 @@ class RoadmapController {
       const userId = req.userId!
       const roadmapId = req.params.roadmapId
       const roadmap = await RoadmapService.unenroll(roadmapId, userId)
+      await UserService.unenroll(roadmapId, userId)
       res.json(roadmap)
     } catch (error) {
       res.status(500).send(error)

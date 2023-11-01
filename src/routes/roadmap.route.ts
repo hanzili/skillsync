@@ -9,7 +9,7 @@ router.get('/:roadmapId', RoadmapController.getRoadmap)
 router.post('/', authenticateJWT, RoadmapController.createRoadmap)
 router.put('/:roadmapId', authenticateJWT, RoadmapController.updateRoadmap)
 router.delete('/:roadmapId', authenticateJWT, RoadmapController.deleteRoadmap)
-router.post('/:roadmapId/enroll', RoadmapController.enroll)
-router.post('/:roadmapId/unenroll', RoadmapController.unenroll)
+router.post('/:roadmapId/enroll', authenticateJWT, RoadmapController.enroll)
+router.post('/:roadmapId/unenroll', authenticateJWT, RoadmapController.unenroll)
 
 export default router

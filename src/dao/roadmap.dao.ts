@@ -1,4 +1,5 @@
 import Roadmap, { IRoadmap } from '../models/Roadmap'
+import { createObjectId } from '../utils/common.utils'
 
 class RoadmapDao {
   async findAllRoadmaps(): Promise<IRoadmap[]> {
@@ -28,7 +29,7 @@ class RoadmapDao {
   async enroll(roadmapId: string, userId: string): Promise<IRoadmap> {
     const updatedRoadmap = await Roadmap.findByIdAndUpdate(
       roadmapId,
-      { $push: { enrolledUsers: userId } },
+      { $push: { enrolledUsers: createObjectId(userId) } },
       { new: true },
     )
     if (!updatedRoadmap) {
@@ -40,7 +41,7 @@ class RoadmapDao {
   async unenroll(roadmapId: string, userId: string): Promise<IRoadmap> {
     const updatedRoadmap = await Roadmap.findByIdAndUpdate(
       roadmapId,
-      { $pull: { enrolledUsers: userId } },
+      { $pull: { enrolledUsers: createObjectId(userId) } },
       { new: true },
     )
     if (!updatedRoadmap) {
