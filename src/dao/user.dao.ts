@@ -64,6 +64,30 @@ class UserDao {
     }
     return updatedUser
   }
+
+  async enroll(roadmapId: string, userId: string): Promise<IUser> {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { enrolledRoadmaps: roadmapId } },
+      { new: true },
+    )
+    if (!updatedUser) {
+      throw new Error('User not found')
+    }
+    return updatedUser
+  }
+
+  async unenroll(roadmapId: string, userId: string): Promise<IUser> {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { enrolledRoadmaps: roadmapId } },
+      { new: true },
+    )
+    if (!updatedUser) {
+      throw new Error('User not found')
+    }
+    return updatedUser
+  }
 }
 
 export default new UserDao()

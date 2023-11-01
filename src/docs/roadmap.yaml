@@ -1,4 +1,9 @@
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Roadmap:
       type: object
@@ -23,3 +28,92 @@ components:
         forum:
           type: string
           format: objectId
+paths:
+  /api/roadmaps/:
+    get:
+      tags:
+        - Roadmaps
+      summary: Get all roadmaps
+      responses:
+        '200':
+          description: An array of roadmaps
+    post:
+      tags:
+        - Roadmaps
+      summary: Create a new roadmap
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Roadmap created
+  /api/roadmaps/{roadmapId}:
+    get:
+      tags:
+        - Roadmaps
+      summary: Get a single roadmap by ID
+      parameters:
+        - name: roadmapId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Single roadmap object
+    put:
+      tags:
+        - Roadmaps
+      summary: Update a roadmap
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roadmapId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Roadmap updated
+    delete:
+      tags:
+        - Roadmaps
+      summary: Delete a roadmap
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roadmapId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Roadmap deleted
+  /api/roadmaps/{roadmapId}/enroll:
+    post:
+      tags:
+        - Roadmaps
+      summary: Enroll in a roadmap
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roadmapId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Enrolled in roadmap
+  /api/roadmaps/{roadmapId}/unenroll:
+    post:
+      tags:
+        - Roadmaps
+      summary: Unenroll from a roadmap
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roadmapId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Unenrolled from roadmap

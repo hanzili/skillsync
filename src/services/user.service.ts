@@ -71,6 +71,18 @@ class UserService {
     if (!updatedUser) throw new Error('User not found')
     return updatedUser
   }
+
+  async enroll(roadmapId: string, userId: string): Promise<IUser> {
+    const updatedUser = await UserDao.enroll(roadmapId, userId)
+    if (!updatedUser) throw new Error('User not found')
+    return updatedUser
+  }
+
+  async unenroll(roadmapId: string, userId: string): Promise<IUser> {
+    const updatedUser = await UserDao.unenroll(roadmapId, userId)
+    if (!updatedUser) throw new Error('User not found')
+    return updatedUser
+  }
 }
 
 export default new UserService()

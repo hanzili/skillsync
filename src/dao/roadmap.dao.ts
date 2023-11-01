@@ -24,6 +24,30 @@ class RoadmapDao {
   async deleteRoadmap(roadmapId: string): Promise<void> {
     await Roadmap.findByIdAndDelete(roadmapId)
   }
+
+  async enroll(roadmapId: string, userId: string): Promise<IRoadmap> {
+    const updatedRoadmap = await Roadmap.findByIdAndUpdate(
+      roadmapId,
+      { $push: { enrolledUsers: userId } },
+      { new: true },
+    )
+    if (!updatedRoadmap) {
+      throw new Error('Roadmap not found')
+    }
+    return updatedRoadmap
+  }
+
+  async unenroll(roadmapId: string, userId: string): Promise<IRoadmap> {
+    const updatedRoadmap = await Roadmap.findByIdAndUpdate(
+      roadmapId,
+      { $pull: { enrolledUsers: userId } },
+      { new: true },
+    )
+    if (!updatedRoadmap) {
+      throw new Error('Roadmap not found')
+    }
+    return updatedRoadmap
+  }
 }
 
 export default new RoadmapDao()

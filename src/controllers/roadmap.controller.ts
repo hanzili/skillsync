@@ -58,6 +58,29 @@ class RoadmapController {
       res.status(500).send(error)
     }
   }
+
+  async enroll(req: CustomRequest, res: Response) {
+    try {
+      const userId = req.userId!
+      const roadmapId = req.params.roadmapId
+      const roadmap = await RoadmapService.enroll(roadmapId, userId)
+      await UserService.enroll(roadmapId, userId)
+      res.json(roadmap)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async unenroll(req: CustomRequest, res: Response) {
+    try {
+      const userId = req.userId!
+      const roadmapId = req.params.roadmapId
+      const roadmap = await RoadmapService.unenroll(roadmapId, userId)
+      res.json(roadmap)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
 }
 
 export default new RoadmapController()
