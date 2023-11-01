@@ -1,10 +1,7 @@
-import { Request, Response, NextFunction } from 'express'
-import { verifyToken } from '../utils/userUtils'
+import { Response, NextFunction } from 'express'
+import { verifyToken } from '../utils/user.utils'
 import userService from '../services/user.service'
-
-interface CustomRequest extends Request {
-  userId?: string
-}
+import { CustomRequest } from '../types/custom'
 
 interface TokenPayload {
   userId: string

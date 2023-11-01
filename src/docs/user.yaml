@@ -121,7 +121,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Profile'
 
-  /api/users/profile/{id}:
+  /api/users/profile/{userId}:
     get:
       tags:
         - Users
@@ -173,7 +173,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Profile'
 
-  /api/users/{id}:
+  /api/users/{userId}:
     delete:
       tags:
         - Users

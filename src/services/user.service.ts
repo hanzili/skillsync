@@ -1,6 +1,6 @@
 import UserDao from '../dao/user.dao'
 import { IUser } from '../models/User'
-import { generateToken } from '../utils/userUtils'
+import { generateToken } from '../utils/user.utils'
 
 class UserService {
   async register(
@@ -55,6 +55,33 @@ class UserService {
     const user = await UserDao.findUserById(userId)
     if (!user) throw new Error('User not found')
     return requiredRoles.includes(user.role)
+  }
+
+  async addCreatedRoadmap(userId: string, roadmapId: string): Promise<IUser> {
+    const updatedUser = await UserDao.addCreatedRoadmap(userId, roadmapId)
+    if (!updatedUser) throw new Error('User not found')
+    return updatedUser
+  }
+
+  async deleteCreatedRoadmap(
+    userId: string,
+    roadmapId: string,
+  ): Promise<IUser> {
+    const updatedUser = await UserDao.deleteCreatedRoadmap(userId, roadmapId)
+    if (!updatedUser) throw new Error('User not found')
+    return updatedUser
+  }
+
+  async enroll(roadmapId: string, userId: string): Promise<IUser> {
+    const updatedUser = await UserDao.enroll(roadmapId, userId)
+    if (!updatedUser) throw new Error('User not found')
+    return updatedUser
+  }
+
+  async unenroll(roadmapId: string, userId: string): Promise<IUser> {
+    const updatedUser = await UserDao.unenroll(roadmapId, userId)
+    if (!updatedUser) throw new Error('User not found')
+    return updatedUser
   }
 }
 

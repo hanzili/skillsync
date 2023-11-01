@@ -7,6 +7,7 @@ import swaggerJsdoc from 'swagger-jsdoc'
 import swaggerDefinition from '../swaggerDefinition'
 
 import userRoutes from './routes/user.route'
+import roadmapRoutes from './routes/roadmap.route'
 
 dotenv.config()
 
@@ -23,6 +24,7 @@ const specs = swaggerJsdoc({
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 app.use('/api/users', userRoutes)
+app.use('/api/roadmaps', roadmapRoutes)
 
 // Sample Route
 app.get('/', (req, res) => {

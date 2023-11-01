@@ -1,4 +1,5 @@
 import User, { IUser } from '../models/User'
+import { createObjectId } from '../utils/common.utils'
 
 class UserDao {
   async createUser(
@@ -36,6 +37,62 @@ class UserDao {
   async deleteUser(userId: string): Promise<IUser | null> {
     const deletedUser = await User.findByIdAndDelete(userId)
     return deletedUser
+  }
+
+  async addCreatedRoadmap(userId: string, roadmapId: string): Promise<IUser> {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { createdRoadmaps: roadmapId } },
+      { new: true },
+    )
+    if (!updatedUser) {
+      throw new Error('User not found')
+    }
+    return updatedUser
+  }
+
+  async deleteCreatedRoadmap(
+    userId: string,
+    roadmapId: string,
+  ): Promise<IUser> {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { createdRoadmaps: roadmapId } },
+      { new: true },
+    )
+    if (!updatedUser) {
+      throw new Error('User not found')
+    }
+    return updatedUser
+  }
+
+  async enroll(roadmapId: string, userId: string): Promise<IUser> {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { enrolledRoadmaps: roadmapId } },
+      { new: true },
+    )
+    if (!updatedUser) {
+      throw new Error('User not found')
+    }
+    return updatedUser
+  }
+
+  async unenroll(roadmapId: string, userId: string): Promise<IUser> {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { enrolledRoadmaps: roadmapId } },
+      { new: true },
+    )
+    if (!updatedUser) {
+      throw new Error('User not found')
+    }
+    return updatedUser
+  }
+
+  // a function that return all users who have enrolled in a roadmap
+  async findUsersByEnrolledRoadmap(roadmapId: string): Promise<IUser[]> {
+    return User.find({ enrolledRoadmaps: createObjectId(roadmapId) })
   }
 }
 
