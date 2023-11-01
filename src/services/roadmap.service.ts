@@ -1,4 +1,4 @@
-import Roadmap, { IRoadmap } from '../models/Roadmap'
+import { IRoadmap } from '../models/Roadmap'
 import RoadmapDao from '../dao/roadmap.dao'
 import mongoose from 'mongoose'
 

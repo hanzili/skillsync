@@ -1,6 +1,6 @@
 import RoadmapService from '../services/roadmap.service'
 import { Request, Response } from 'express'
-
+import { CustomRequest } from '../types/custom'
 
 class RoadmapController {
   async getRoadmaps(req: Request, res: Response) {
@@ -22,7 +22,7 @@ class RoadmapController {
     }
   }
 
-  async createRoadmap(req: Request, res: Response) {
+  async createRoadmap(req: CustomRequest, res: Response) {
     try {
       const userId = req.userId!
       const newRoadmap = await RoadmapService.createRoadmap(req.body, userId)
@@ -32,7 +32,7 @@ class RoadmapController {
     }
   }
 
-  async updateRoadmap(req: Request, res: Response) {
+  async updateRoadmap(req: CustomRequest, res: Response) {
     try {
       const userId = req.userId!
       const updatedRoadmap = await RoadmapService.updateRoadmap(
@@ -46,7 +46,7 @@ class RoadmapController {
     }
   }
 
-  async deleteRoadmap(req: Request, res: Response) {
+  async deleteRoadmap(req: CustomRequest, res: Response) {
     try {
       const userId = req.userId!
       await RoadmapService.deleteRoadmap(req.params.roadmapId, userId)
