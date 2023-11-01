@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose'
-import { hashPassword, comparePasswords } from '../utils/userUtils'
+import { hashPassword, comparePasswords } from '../utils/user.utils'
 
 export interface IUser extends Document {
   username: string

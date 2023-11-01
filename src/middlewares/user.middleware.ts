@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express'
-import { verifyToken } from '../utils/userUtils'
+import { verifyToken } from '../utils/user.utils'
 import userService from '../services/user.service'
 import { CustomRequest } from '../types/custom'
 

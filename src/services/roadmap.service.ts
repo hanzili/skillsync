@@ -1,6 +1,6 @@
 import { IRoadmap } from '../models/Roadmap'
 import RoadmapDao from '../dao/roadmap.dao'
-import mongoose from 'mongoose'
+import { createObjectId } from '../utils/common.utils'
 
 class RoadmapService {
   async getRoadmaps(): Promise<IRoadmap[]> {
@@ -17,7 +17,7 @@ class RoadmapService {
   ): Promise<IRoadmap> {
     const newRoadmap = {
       ...roadmapData,
-      creator: new mongoose.Types.ObjectId(userId),
+      creator: createObjectId(userId),
     }
     return await RoadmapDao.createRoadmap(newRoadmap)
   }

@@ -1,6 +1,7 @@
 import RoadmapService from '../services/roadmap.service'
 import { Request, Response } from 'express'
 import { CustomRequest } from '../types/custom'
+import UserService from '../services/user.service'
 
 class RoadmapController {
   async getRoadmaps(req: Request, res: Response) {
@@ -26,6 +27,7 @@ class RoadmapController {
     try {
       const userId = req.userId!
       const newRoadmap = await RoadmapService.createRoadmap(req.body, userId)
+      await UserService.addCreatedRoadmap(userId, newRoadmap.id)
       res.json(newRoadmap)
     } catch (error) {
       res.status(500).send(error)
@@ -50,6 +52,7 @@ class RoadmapController {
     try {
       const userId = req.userId!
       await RoadmapService.deleteRoadmap(req.params.roadmapId, userId)
+      await UserService.deleteCreatedRoadmap(userId, req.params.roadmapId)
       res.json({ message: 'Roadmap deleted successfully' })
     } catch (error) {
       res.status(500).send(error)

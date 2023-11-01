@@ -37,6 +37,33 @@ class UserDao {
     const deletedUser = await User.findByIdAndDelete(userId)
     return deletedUser
   }
+
+  async addCreatedRoadmap(userId: string, roadmapId: string): Promise<IUser> {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { createdRoadmaps: roadmapId } },
+      { new: true },
+    )
+    if (!updatedUser) {
+      throw new Error('User not found')
+    }
+    return updatedUser
+  }
+
+  async deleteCreatedRoadmap(
+    userId: string,
+    roadmapId: string,
+  ): Promise<IUser> {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { createdRoadmaps: roadmapId } },
+      { new: true },
+    )
+    if (!updatedUser) {
+      throw new Error('User not found')
+    }
+    return updatedUser
+  }
 }
 
 export default new UserDao()
