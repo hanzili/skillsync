@@ -5,7 +5,7 @@ export interface IContent extends Document {
   url: string
   title: string
   description: string
-  roadmap: Array<mongoose.Types.ObjectId>
+  roadmap: mongoose.Types.ObjectId
 }
 
 const contentSchema = new Schema({

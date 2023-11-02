@@ -12,7 +12,7 @@ components:
           type: string
         description:
           type: string
-        content:
+        contents:
           type: array
           items:
             type: string

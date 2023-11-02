@@ -1,4 +1,9 @@
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Content:
       type: object
@@ -12,3 +17,105 @@ components:
           type: string
         description:
           type: string
+        roadmap:
+          type: string
+          format: objectId
+    UpdateContent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [video, article, assignment, quiz]
+        url:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+paths:
+  /api/contents/{contentId}:
+    get:
+      summary: Get content by ID
+      operationId: getContent
+      tags:
+        - Content
+      parameters:
+        - name: contentId
+          in: path
+          required: true
+          description: Unique identifier of the content
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Content fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Content'
+        '404':
+          description: Content not found
+    put:
+      summary: Update content by ID
+      operationId: updateContent
+      tags:
+        - Content
+      parameters:
+        - name: contentId
+          in: path
+          required: true
+          description: Unique identifier of the content to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContent'
+      responses:
+        '200':
+          description: Content updated successfully
+      security:
+        - bearerAuth: []
+    delete:
+      summary: Delete content by ID
+      operationId: deleteContent
+      tags:
+        - Content
+      parameters:
+        - name: contentId
+          in: path
+          required: true
+          description: Unique identifier of the content to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Content deleted successfully
+      security:
+        - bearerAuth: []
+  /api/contents/{roadmapId}:
+    post:
+      summary: Create content within a roadmap
+      operationId: createContent
+      tags:
+        - Content
+      parameters:
+        - name: roadmapId
+          in: path
+          required: true
+          description: Unique identifier of the roadmap
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Content'
+      responses:
+        '201':
+          description: Content created successfully
+      security:
+        - bearerAuth: []
