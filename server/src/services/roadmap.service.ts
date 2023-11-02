@@ -2,6 +2,7 @@ import { IRoadmap } from '../models/Roadmap'
 import RoadmapDao from '../dao/roadmap.dao'
 import { createObjectId } from '../utils/common.utils'
 import UserDao from '../dao/user.dao'
+import ForumDao from '../dao/forum.dao'
 
 class RoadmapService {
   async getRoadmaps(): Promise<IRoadmap[]> {
@@ -16,11 +17,16 @@ class RoadmapService {
     roadmapData: Partial<IRoadmap>,
     userId: string,
   ): Promise<IRoadmap> {
-    const newRoadmap = {
+    const newRoadmapContent = {
       ...roadmapData,
       creator: createObjectId(userId),
     }
-    return await RoadmapDao.createRoadmap(newRoadmap)
+    const newRoadmap = await RoadmapDao.createRoadmap(newRoadmapContent)
+    // create a forum for this roadmap
+    const newForum = await ForumDao.createForum({ roadmap: newRoadmap.id })
+    // add forum id to roadmap
+    await RoadmapDao.updateRoadmap(newRoadmap.id, { forum: newForum.id })
+    return newRoadmap
   }
 
   async updateRoadmap(
@@ -46,6 +52,7 @@ class RoadmapService {
     if (roadmap.creator.toString() !== userId) {
       throw new Error('Unauthorized')
     }
+    await ForumDao.deleteForum(roadmap.forum.toString())
     await RoadmapDao.deleteRoadmap(roadmapId)
   }
 
