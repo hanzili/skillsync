@@ -9,6 +9,7 @@ import swaggerDefinition from '../swaggerDefinition'
 import userRoutes from './routes/user.route'
 import roadmapRoutes from './routes/roadmap.route'
 import contentRoutes from './routes/content.route'
+import forumFromRoutes from './routes/forum.route'
 
 dotenv.config()
 
@@ -27,6 +28,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 app.use('/api/users', userRoutes)
 app.use('/api/roadmaps', roadmapRoutes)
 app.use('/api/contents', contentRoutes)
+app.use('/api/forums', forumFromRoutes)
 
 // Sample Route
 app.get('/', (req, res) => {
