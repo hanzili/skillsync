@@ -49,6 +49,24 @@ class RoadmapDao {
     }
     return updatedRoadmap
   }
+
+  async addContentToRoadmap(
+    contentId: string,
+    roadmapId: string,
+  ): Promise<void> {
+    await Roadmap.findByIdAndUpdate(roadmapId, {
+      $push: { contents: createObjectId(contentId) },
+    })
+  }
+
+  async deleteContentFromRoadmap(
+    contentId: string,
+    roadmapId: string,
+  ): Promise<void> {
+    await Roadmap.findByIdAndUpdate(roadmapId, {
+      $pull: { contents: createObjectId(contentId) },
+    })
+  }
 }
 
 export default new RoadmapDao()

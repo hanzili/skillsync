@@ -68,7 +68,6 @@ class RoadmapController {
       await UserService.enroll(roadmapId, userId)
       res.json(roadmap)
     } catch (error) {
-      console.error('Error caught:', error) // Log the error
       res.status(500).send(error)
     }
   }
