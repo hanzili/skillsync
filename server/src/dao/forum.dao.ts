@@ -1,4 +1,5 @@
 import Forum, { IForum } from '../models/Forum'
+import { createObjectId } from '../utils/common.utils'
 
 class ForumDao {
   async findForumById(forumId: string): Promise<IForum | null> {
@@ -12,6 +13,21 @@ class ForumDao {
 
   async deleteForum(forumId: string): Promise<void> {
     await Forum.findByIdAndDelete(forumId)
+  }
+
+  async addThreadToForum(forumId: string, threadId: string): Promise<void> {
+    await Forum.findByIdAndUpdate(forumId, {
+      $push: { threads: createObjectId(threadId) },
+    })
+  }
+
+  async removeThreadFromForum(
+    forumId: string,
+    threadId: string,
+  ): Promise<void> {
+    await Forum.findByIdAndUpdate(forumId, {
+      $pull: { threads: createObjectId(threadId) },
+    })
   }
 }
 

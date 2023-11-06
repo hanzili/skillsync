@@ -1,4 +1,9 @@
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Thread:
       type: object
@@ -16,3 +21,97 @@ components:
         forum:
           type: string
           format: objectId
+paths:
+  /api/threads/{threadId}:
+    get:
+      summary: Get a thread by ID
+      tags:
+        - Thread
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+          description: The thread's ID
+      responses:
+        '200':
+          description: A thread object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+    put:
+      summary: Update a thread by ID
+      security:
+        - bearerAuth: []
+      tags:
+        - Thread
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+          description: The thread's ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '200':
+          description: Successfully updated thread
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+    delete:
+      summary: Delete a thread by ID
+      security:
+        - bearerAuth: []
+      tags:
+        - Thread
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+          description: The thread's ID
+      responses:
+        '200':
+          description: Successfully deleted thread
+  /api/threads/{forumId}:
+    post:
+      summary: Create a new thread in a forum
+      security:
+        - bearerAuth: []
+      tags:
+        - Thread
+      parameters:
+        - in: path
+          name: forumId
+          required: true
+          schema:
+            type: string
+          description: The forum's ID where the thread will be created
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '201':
+          description: Successfully created thread
+          content:
+            application/json:
+              schema:
