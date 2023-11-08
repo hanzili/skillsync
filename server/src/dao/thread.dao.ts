@@ -29,6 +29,18 @@ class ThreadDao {
     const deletedThread = await Thread.findByIdAndDelete(threadId)
     return deletedThread
   }
+
+  async addPostToThread(threadId: string, postId: string): Promise<void> {
+    await Thread.findByIdAndUpdate(threadId, {
+      $push: { posts: postId },
+    })
+  }
+
+  async deletePostFromThread(threadId: string, postId: string): Promise<void> {
+    await Thread.findByIdAndUpdate(threadId, {
+      $pull: { posts: postId },
+    })
+  }
 }
 
 export default new ThreadDao()
