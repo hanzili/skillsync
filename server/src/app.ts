@@ -11,6 +11,7 @@ import roadmapRoutes from './routes/roadmap.route'
 import contentRoutes from './routes/content.route'
 import forumRoutes from './routes/forum.route'
 import threadRoutes from './routes/thread.route'
+import postRoutes from './routes/post.route'
 
 dotenv.config()
 
@@ -31,6 +32,7 @@ app.use('/api/roadmaps', roadmapRoutes)
 app.use('/api/contents', contentRoutes)
 app.use('/api/forums', forumRoutes)
 app.use('/api/threads', threadRoutes)
+app.use('/api/posts', postRoutes)
 
 // Sample Route
 app.get('/', (req, res) => {
