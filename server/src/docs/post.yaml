@@ -1,0 +1,110 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Post:
+      type: object
+      properties:
+        text:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        creator:
+          type: string
+          format: objectId
+        thread:
+          type: string
+          format: objectId
+paths:
+  /api/posts/{postId}:
+    get:
+      tags:
+        - Post
+      summary: Get a specific post
+      description: Retrieve a post by its ID
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the post
+      responses:
+        '200':
+          description: Successfully retrieved post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+
+    put:
+      tags:
+        - Post
+      summary: Update an existing post
+      description: Update a post by its ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: Successfully updated post
+
+    delete:
+      tags:
+        - Post
+      summary: Delete a specific post
+      description: Delete a post by its ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the post
+      responses:
+        '200':
+          description: Successfully deleted post
+
+  /api/posts/{threadId}:
+    post:
+      tags:
+        - Post
+      summary: Create a post in a thread
+      description: Create a new post within a specific thread
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the thread
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '201':
+          description: Successfully created post

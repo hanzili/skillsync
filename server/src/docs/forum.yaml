@@ -1,0 +1,41 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Forum:
+      type: object
+      properties:
+        roadmap:
+          type: string
+          format: objectId
+        threads:
+          type: array
+          items:
+            type: string
+            format: objectId
+paths:
+  /api/forums/{forumId}:
+    get:
+      summary: Get forum by ID
+      operationId: getForum
+      tags:
+        - Forum
+      parameters:
+        - name: forumId
+          in: path
+          required: true
+          description: Unique identifier of the forum
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Forum fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forum'
+        '404':
+          description: Forum not found
